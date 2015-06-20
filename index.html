@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Height Prediction Model</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Height Prediction Model">
+  <meta name="author" content="Fille8557">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/Default.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Height Prediction Model</h1>
+    <h2>A shiny app</h2>
+    <p>Fille8557<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Height prediction model shiny app</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>My shiny app (<a href="https://fille8557.shinyapps.io/shinystuff">https://fille8557.shinyapps.io/shinystuff</a>) attemps to answer the question: Can I guess your height based only on your parents&#39; heights?</p>
+
+<p>This app will make predictions based on: </p>
+
+<ul>
+<li>Units: centimeters or inches</li>
+<li>Sex: male or female</li>
+</ul>
+
+<p>As well as give a 90% prediction interval, since not everyone fits perfectly into the model.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Data used</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>I used the historical GaltonFamilies dataset from the UsingR package.</p>
+
+<p>Unlike the simpler Galton dataset, GaltonFamilies gives the gender of the child. </p>
+
+<p>This allows my prediction to have an extra element.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Calculations done on data - linear model</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In order to predict heights based on sex, I created a simple linear model with the added element of subsetting by gender.</p>
+
+<p>For example, for males:</p>
+
+<pre><code class="r">lm(childHeight~midparentHeight, 
+   gender==&quot;male&quot;, data=GaltonFamilies)
+</code></pre>
+
+<p>But first, to obtain the parents&#39; mid height, I had to take the input, multiply the mother&#39;s height by 1.08, add it to the father&#39;s height, and divide it by two.</p>
+
+<p>So for a mother with a height of 65 inches and a father with a height of 68 inches, the calculation would be:</p>
+
+<pre><code class="r">((65*1.08)+68)/2
+</code></pre>
+
+<pre><code>## [1] 69.1
+</code></pre>
+
+<p>This is the number used in the model to make the height prediction.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Calculations done on data - height units</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In order to predict using centimeters, the mid height, when given in centimeters, was multipled by 0.393701, to be used in the model which was based on measurements in inches.</p>
+
+<p>So for example, if a mother&#39;s height is 165 centimeters and a father&#39;s height is 168 centimeters, the mid parents height in inches used in the model is:</p>
+
+<pre><code class="r">(((165*1.08)+168)/2)*0.393701
+</code></pre>
+
+<pre><code>## [1] 68.14964
+</code></pre>
+
+<p>Then, once the model gave the result in inches, it was multipled by 2.54 to return the result in centimeters for the user.</p>
+
+<pre><code class="r">68.15 * 2.54
+</code></pre>
+
+<pre><code>## [1] 173.101
+</code></pre>
+
+<p>This simple multiplication allows the app to be used by people using either unit of measurement.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Height prediction model shiny app'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Data used'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Calculations done on data - linear model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Calculations done on data - height units'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
